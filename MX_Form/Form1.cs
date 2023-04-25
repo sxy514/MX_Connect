@@ -61,6 +61,7 @@ namespace MX_Form
             else
             {
                 MessageBox.Show("连接失败");
+                return;
             }
             // 现在，读取各个轴的位置Z1: D4420 Z2:D4620 T1:D4820 Y1:D5020
             plc.GetDevice("D4420", out z1Pos);
