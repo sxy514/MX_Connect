@@ -1,0 +1,16 @@
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.exe.config
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.exe
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.pdb
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Connect.exe
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Connect.pdb
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.AssemblyReference.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.SuggestedBindingRedirects.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\Interop.ActUtlTypeLib.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.ResolveComReference.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.Form1.resources
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.Properties.Resources.resources
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.GenerateResource.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.CoreCompileInputs.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.CopyComplete
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.exe
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.pdb
