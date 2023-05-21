@@ -1,0 +1,10 @@
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\bin\Release\MX_Connect.exe
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\bin\Release\MX_Connect.pdb
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.csproj.AssemblyReference.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.csproj.SuggestedBindingRedirects.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\Interop.ActUtlDataLoggingLib.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\Interop.ActUtlTypeLib.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.csproj.ResolveComReference.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.csproj.CoreCompileInputs.cache
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.exe
+E:\软件项目\RiderProject\MX_Connect\MX_Connect\obj\Release\MX_Connect.pdb
