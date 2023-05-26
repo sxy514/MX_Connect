@@ -30,6 +30,13 @@ namespace MCT_Test
             int mTest;
            plc.GetDevice("M241",out mTest);
            Console.WriteLine(mTest);
+           plc.GetDevice("M240", out IoNum[0]);
+           Console.WriteLine(IoNum[0]);
+
+           plc.GetDevice("M242", out IoNum[1]);
+            Console.WriteLine(IoNum[1]);
+
+
 
 
 

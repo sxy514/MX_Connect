@@ -8,9 +8,6 @@ E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.csproj.Generat
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.csproj.CoreCompileInputs.cache
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.exe
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.pdb
-E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Debug\MX_Connect.exe
-E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Debug\MX_Connect.pdb
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\Interop.ActUtlTypeLib.dll
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.csproj.ResolveComReference.cache
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.Form1.resources
-E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Debug\MX_Form.csproj.CopyComplete

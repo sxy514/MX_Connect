@@ -149,6 +149,8 @@ namespace MX_Form
             }
             else { label16.Text = "OK"; }
 
+            button1.Enabled = false;
+
         }
 
         private void button2_Click(object sender, EventArgs e) //  CheckIO_Reset
@@ -163,6 +165,7 @@ namespace MX_Form
             {
                 MessageBox.Show("Please check the equipment on site");
                 plc.Close();
+                button1.Enabled = true;
             }
 
         }
@@ -193,6 +196,7 @@ namespace MX_Form
             {
                 MessageBox.Show("Please check the equipment on site");
                 plc.Close();
+                button1.Enabled = true;
             }
             
         }
@@ -204,10 +208,12 @@ namespace MX_Form
             logicalNumber = checkedListBox1.SelectedIndex + 1; // checklist 索引号从0开始的
             //string a = Convert.ToString(logicalNumber);
            // MessageBox.Show(a);
-
-
         }
-       
+
+      
+
+
+
 
     }
 }
