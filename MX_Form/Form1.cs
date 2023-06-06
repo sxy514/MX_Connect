@@ -65,26 +65,20 @@ namespace MX_Form
             var returnCode = plc.Open();
             if (returnCode == 0)
             {
-
                 // 现在，读取各个轴的位置
-                try
-                {
-                    plc.GetDevice("M240", out _z1Pos);
-                    plc.GetDevice("M241", out _z2Pos);
-                    plc.GetDevice("M242", out _z3Pos);
-                    plc.GetDevice("M243", out _z4Pos);
-                    plc.GetDevice("M244", out _t1Pos);
-                    plc.GetDevice("M245", out _y1Pos);
-                    plc.GetDevice("M246", out _handStatus);
-                    plc.GetDevice("M247", out _bufferStatus);
-                }
-                catch (Exception exception)
-                {
-                    plc.Close();
-                    Console.WriteLine(exception);
-                    throw;
-                }
-               
+                 returnCode += plc.GetDevice("M240", out _z1Pos);
+                 returnCode += plc.GetDevice("M241", out _z2Pos);
+                 returnCode += plc.GetDevice("M242", out _z3Pos);
+                 returnCode += plc.GetDevice("M243", out _z4Pos);
+                 returnCode += plc.GetDevice("M244", out _t1Pos);
+                 returnCode += plc.GetDevice("M245", out _y1Pos);
+                 returnCode += plc.GetDevice("M246", out _handStatus);
+                 returnCode += plc.GetDevice("M247", out _bufferStatus);
+                 if (returnCode != 0)
+                 {
+                     MessageBox.Show("PLC getDevice failed. Please contact the administrator.");
+                     plc.Close(); // try Close
+                 }
             }
             else
             {
@@ -196,36 +190,27 @@ namespace MX_Form
 
         private void button3_Click(object sender, EventArgs e) // Auto 按键
         {
-            if (_z1Pos == 1 && _z2Pos == 1 && _z3Pos == 1 && _z4Pos == 1 && _t1Pos == 1 && _y1Pos == 1 && _handStatus == 1 &&
+            var returnCode1 = 0;
+            if (_z1Pos == 1 && _z2Pos == 1 && _z3Pos == 1 && _z4Pos == 1 && _t1Pos == 1 && _y1Pos == 1 &&
+                _handStatus == 1 &&
                 _bufferStatus == 1)
             {
-                try
-                {
-                    plc.SetDevice("M754", 1); //initial
+                returnCode1 += plc.SetDevice("M754", 1); //initial ？
+                Thread.Sleep(500);
 
-                    // All selection
-                    plc.SetDevice("M750", 1);
-                    // Auto Mode
-                    Thread.Sleep(500);
-                    plc.SetDevice("M755", 1);
-                    // start
-                    Thread.Sleep(500);
-                    plc.SetDevice("M757", 1);
+                returnCode1 += plc.SetDevice("M750", 1); // All selection
+                Thread.Sleep(500);
 
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                    throw;
-                }
-                var returnCode =  plc.Close();
-                // 如果returnCode不等于0，则显示MessageBox
-                if (returnCode != 0)
+                returnCode1 += plc.SetDevice("M755", 1); // Auto Mode
+                Thread.Sleep(500);
+
+                returnCode1 += plc.SetDevice("M757", 1); // start
+
+                returnCode1 += plc.Close();
+                if (returnCode1 != 0)
                 {
                     MessageBox.Show("PLC Close failed. Please contact the administrator.");
-                    return;
                 }
-               
             }
             else
             {
