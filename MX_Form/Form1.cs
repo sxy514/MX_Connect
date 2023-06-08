@@ -37,6 +37,7 @@ namespace MX_Form
         // 为各个轴创建变量
         // 创建一个整型数组，用于存储8个轴变量的地址
         private readonly int[] _ioAdress = new int[8];
+
         // 创建PLC对象
         private readonly ActUtlType plc = new ActUtlType();
 
@@ -64,10 +65,7 @@ namespace MX_Form
                 returnCode += plc.GetDevice("M245", out _ioAdress[5]);
                 returnCode += plc.GetDevice("M246", out _ioAdress[6]);
                 returnCode += plc.GetDevice("M247", out _ioAdress[7]);
-                if (returnCode != 0)
-                {
-                    MessageBox.Show("PLC getDevice failed. Please contact the administrator.");
-                }
+                if (returnCode != 0) MessageBox.Show("PLC getDevice failed. Please contact the administrator.");
             }
             else
             {
@@ -157,29 +155,28 @@ namespace MX_Form
                 label16.Text = "OK";
             }
 
-            returnCode = plc.Close();  // 注意，这里关闭了PLC连接
+            returnCode = plc.Close();
             if (returnCode != 0)
-            {
                 MessageBox.Show("PLC Close failed. Please try Again!.");
-               
-            }
             else
-            {
                 button1.Enabled = false;
-            }
-            
         }
 
         private void button2_Click(object sender, EventArgs e) //  CheckIO_Reset
         {
-            foreach (var checkStatus in _ioAdress)
+            if (button1.Enabled)
             {
+                MessageBox.Show("Please select the equipment and connect it and try again!");
+                return;
+            }
+
+            foreach (var checkStatus in _ioAdress)
                 if (checkStatus == 0)
                 {
-                    MessageBox.Show("MCT cannot be remotely recovered .Please check the equipment on site");
+                    MessageBox.Show("MCT cannot be remotely recovered .Please check the equipment on site.");
                     return;
                 }
-            }
+
 
             var returnCode = 0;
             // 连接PLC
@@ -193,9 +190,9 @@ namespace MX_Form
 
             returnCode += plc.SetDevice("M759", 1); // 清除报警
             Thread.Sleep(100);
-            returnCode +=  plc.SetDevice("M759", 0); // 复位
+            returnCode += plc.SetDevice("M759", 0); // 复位
 
-            returnCode += plc.SetDevice("M750", 1);// all select
+            returnCode += plc.SetDevice("M750", 1); // all select
             Thread.Sleep(100);
 
             returnCode += plc.SetDevice("M755", 1); // manual mode
@@ -206,85 +203,53 @@ namespace MX_Form
             returnCode += plc.SetDevice("M758", 0); // stop复位
 
             if (returnCode != 0)
-            {
                 MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+
+            returnCode = plc.Close(); // 注意，这里关闭了PLC连接
+            if (returnCode != 0)
+                MessageBox.Show("PLC Close failed. Please try Again!.");
+            else
+                button2.Enabled = false;
+        }
+
+        private void button3_Click(object sender, EventArgs e) // Auto 按键
+        {
+            if (button1.Enabled)
+            {
+                MessageBox.Show("Please select the equipment and connect it and try again!");
+                return;
             }
 
-            returnCode = plc.Close();  // 注意，这里关闭了PLC连接
+            var returnCode = 0;
+            // 连接PLC
+            returnCode += plc.Open();
+            if (returnCode != 0)
+            {
+                MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
+                return;
+            }
+
+            returnCode += plc.SetDevice("M754", 1); //initial ？
+            Thread.Sleep(8000);
+
+            returnCode += plc.SetDevice("M750", 1); // All selection
+            Thread.Sleep(100);
+
+            returnCode += plc.SetDevice("M755", 1); // Auto Mode
+            Thread.Sleep(100);
+
+            returnCode += plc.SetDevice("M757", 1); // start
+            Thread.Sleep(5000);
+            returnCode += plc.SetDevice("M757", 0); // start复位
+
+            if (returnCode != 0)
+                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+            returnCode = plc.Close();
             if (returnCode != 0)
             {
                 MessageBox.Show("PLC Close failed. Please try Again!.");
             }
-            else
-            {
-                button2.Enabled = false;
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e) // Auto 按键
-        {   
-           /* var returnCode1 = 0;
-            if (_z1Pos == 1 && _z2Pos == 1 && _z3Pos == 1 && _z4Pos == 1 && _t1Pos == 1 && _y1Pos == 1 &&
-                _handStatus == 1 &&
-                _bufferStatus == 1)
-            {
-                returnCode1 += plc.SetDevice("M754", 1); //initial ？
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M750", 1); // All selection
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M755", 1); // Auto Mode
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M757", 1); // start
-
-                returnCode1 += plc.Close();
-                if (returnCode1 != 0) MessageBox.Show("PLC Close failed. Please contact the administrator.");
-            }
-            else
-            {
-                MessageBox.Show("Please check the equipment on site");
-                plc.Close();
-                button1.Enabled = true;
-            }*/
-           var returnCode = 0;
-           // 连接PLC
-           returnCode += plc.Open();
-           if (returnCode != 0)
-           {
-               MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
-               return;
-           }
-           
-           returnCode += plc.SetDevice("M754", 1); //initial ？
-           Thread.Sleep(8000);
-
-           returnCode += plc.SetDevice("M750", 1); // All selection
-           Thread.Sleep(100);
-
-           returnCode += plc.SetDevice("M755", 1); // Auto Mode
-           Thread.Sleep(100);
-
-           returnCode += plc.SetDevice("M757", 1); // start
-           Thread.Sleep(5000);
-           returnCode += plc.SetDevice("M757", 0); // start复位
-
-           if (returnCode != 0)
-           {
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
-           }
-           returnCode = plc.Close();
-           if (returnCode != 0)
-           {
-                MessageBox.Show("PLC Close failed. Please try Again!.");
-           }
-           else
-           {
-                //button3.Enabled = false;
-           }
-
-
+            //button3.Enabled = false; 这里需要查询设备状态并给出提示了。
 
         }
 
