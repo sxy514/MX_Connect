@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using ActUtlTypeLib;
+using MySql.Data.MySqlClient;
 
 namespace MX_Form
 {
     public partial class Form1 : Form
     {
+        // 创建一个整型数组，用于存储8个轴变量的地址
+        private readonly int[] _ioAdress = new int[8];
+
+        // 创建PLC对象
+        private readonly ActUtlType plc = new ActUtlType();
+
         public Form1()
         {
             InitializeComponent();
@@ -31,15 +38,6 @@ namespace MX_Form
             label14.Text = " ";
             label16.Text = " ";
         }
-
-        private int logicalNumber;
-
-        // 为各个轴创建变量
-        // 创建一个整型数组，用于存储8个轴变量的地址
-        private readonly int[] _ioAdress = new int[8];
-
-        // 创建PLC对象
-        private readonly ActUtlType plc = new ActUtlType();
 
         private void button1_Click(object sender, EventArgs e) // 连接并判断各轴是否在原点
         {
@@ -174,6 +172,8 @@ namespace MX_Form
                 if (checkStatus == 0)
                 {
                     MessageBox.Show("MCT cannot be remotely recovered .Please check the equipment on site.");
+                    plc.Close();
+                    button1.Enabled = true;
                     return;
                 }
 
@@ -188,18 +188,27 @@ namespace MX_Form
                 return;
             }
 
+            /*  从数据库判断单元状态
+            if (IsUnitActive())
+            {
+                MessageBox.Show(
+                    "One unit Of this MCT is Active,Please wait and Operation it until all of this MCT unit is Idle!");
+                plc.Close();
+                return;
+            }*/
+
             returnCode += plc.SetDevice("M759", 1); // 清除报警
-            Thread.Sleep(100);
+            Delay(100);
             returnCode += plc.SetDevice("M759", 0); // 复位
 
             returnCode += plc.SetDevice("M750", 1); // all select
-            Thread.Sleep(100);
+            Delay(100);
 
             returnCode += plc.SetDevice("M755", 1); // manual mode
-            Thread.Sleep(100);
+            Delay(100);
 
             returnCode += plc.SetDevice("M758", 1); // stop
-            Thread.Sleep(300);
+            Delay(300);
             returnCode += plc.SetDevice("M758", 0); // stop复位
 
             if (returnCode != 0)
@@ -230,16 +239,16 @@ namespace MX_Form
             }
 
             returnCode += plc.SetDevice("M754", 1); //initial ？
-            Thread.Sleep(8000);
+            Delay(8000);
 
             returnCode += plc.SetDevice("M750", 1); // All selection
-            Thread.Sleep(100);
+            Delay(100);
 
             returnCode += plc.SetDevice("M755", 1); // Auto Mode
-            Thread.Sleep(100);
+            Delay(100);
 
             returnCode += plc.SetDevice("M757", 1); // start
-            Thread.Sleep(5000);
+            Delay(5000);
             returnCode += plc.SetDevice("M757", 0); // start复位
 
             if (returnCode != 0)
@@ -249,9 +258,93 @@ namespace MX_Form
             {
                 MessageBox.Show("PLC Close failed. Please try Again!.");
             }
+            else
+            {
+                MessageBox.Show("MCT " + (checkedListBox1.SelectedIndex + 112) + " is Auto..");
+               /* MessageBox.Show(IsUnitRun()
+                    ? "MCT is running.Aralm reset success!"
+                    : "Alarm reset failed, Please check the equipment on site");
+               */
+            }
             //button3.Enabled = false; 这里需要查询设备状态并给出提示了。
-
         }
+
+
+        // 创建一个Delay函数，在指定的时间内使用application的DoEvents函数
+        private void Delay(int ms)
+        {
+            var stop = DateTime.Now.AddMilliseconds(ms);
+            while (DateTime.Now < stop) Application.DoEvents();
+        }
+
+      /*  // GetUnitState() 函数用于获取设备状态
+        private Dictionary<string, string> GetUnitState()
+        {
+            var nUnitState = new Dictionary<string, string>();
+            var connstr = "data source=localhost;database=tcsv2;user id=root;password=80899;pooling=false;charset=utf8";
+            using (var conn = new MySqlConnection(connstr))
+            {
+                var Station = "MCT" + (111 + plc.ActLogicalStationNumber);
+                var sql = $"select * from tcsunit where ID like '%{Station}%'";
+                var cmd = new MySqlCommand(sql, conn);
+                conn.Open();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    nUnitState.Add(reader.GetString("ID"), reader.GetString("State"));
+                conn.Close();
+            }
+            return nUnitState;
+        }
+
+        // GetSubUnitState() 函数用于获取SubUnit状态
+        private Dictionary<string, string> GetSubUnitState()
+        {
+            var nSubUnitState = new Dictionary<string, string>();
+            var connstr = "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
+            using (var conn = new MySqlConnection(connstr))
+            {
+                var Station = "MCT" + (111 + plc.ActLogicalStationNumber) + "_V";
+                var sql = $"select * from tcsunit where ID like '%{Station}%'";
+                var cmd = new MySqlCommand(sql, conn);
+                conn.Open();
+                var reader = cmd.ExecuteReader();
+                while (reader.Read()) nSubUnitState.Add(reader.GetString("ID"), reader.GetString("SubState"));
+                conn.Close();
+            }
+
+            return nSubUnitState; // 
+        }
+
+        private bool IsUnitActive()
+        {
+            var SubunitState = new Dictionary<string, string>();
+            var Result = false;
+            SubunitState = GetSubUnitState();
+            foreach (var i in SubunitState.Keys)
+                if (SubunitState[i] != "NOTASSIGN")
+                {
+                    Result = true;
+                    return Result;
+                }
+
+            return Result;
+        }
+
+        private bool IsUnitRun()
+        {
+            var unitState = new Dictionary<string, string>();
+            var Result = true;
+            unitState = GetUnitState();
+            foreach (var i in unitState.Keys)
+                if (!(unitState[i] == "RUN") || unitState[i] == "RESERVED")
+                {
+                    Result = false;
+                    return Result;
+                }
+
+            return Result;
+        }*/
+
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
