@@ -188,14 +188,14 @@ namespace MX_Form
                 return;
             }
 
-            /*  从数据库判断单元状态
+            /*  从数据库判断单元状态 */
             if (IsUnitActive())
             {
                 MessageBox.Show(
                     "One unit Of this MCT is Active,Please wait and Operation it until all of this MCT unit is Idle!");
                 plc.Close();
                 return;
-            }*/
+            }
 
             returnCode += plc.SetDevice("M759", 1); // 清除报警
             Delay(100);
@@ -214,7 +214,7 @@ namespace MX_Form
             if (returnCode != 0)
                 MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
 
-            returnCode = plc.Close(); // 注意，这里关闭了PLC连接
+            returnCode = plc.Close();
             if (returnCode != 0)
                 MessageBox.Show("PLC Close failed. Please try Again!.");
             else
@@ -260,12 +260,17 @@ namespace MX_Form
             }
             else
             {
-                MessageBox.Show("MCT " + (checkedListBox1.SelectedIndex + 112) + " is Auto..");
-               /* MessageBox.Show(IsUnitRun()
-                    ? "MCT is running.Aralm reset success!"
-                    : "Alarm reset failed, Please check the equipment on site");
-               */
+                if (IsUnitRun())
+                    MessageBox.Show("MCT state is running,Alarm reset success");
+                else
+                    MessageBox.Show(MessageFormat() + " , " + " Please go to the site and Confirm!");
+                plc.Close();
             }
+
+            button1.Enabled = true;
+            button2.Enabled = true;
+
+
             //button3.Enabled = false; 这里需要查询设备状态并给出提示了。
         }
 
@@ -277,15 +282,16 @@ namespace MX_Form
             while (DateTime.Now < stop) Application.DoEvents();
         }
 
-      /*  // GetUnitState() 函数用于获取设备状态
+        // GetUnitState() 函数用于获取设备状态
         private Dictionary<string, string> GetUnitState()
         {
             var nUnitState = new Dictionary<string, string>();
-            var connstr = "data source=localhost;database=tcsv2;user id=root;password=80899;pooling=false;charset=utf8";
+            var connstr =
+                "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
             using (var conn = new MySqlConnection(connstr))
             {
                 var Station = "MCT" + (111 + plc.ActLogicalStationNumber);
-                var sql = $"select * from tcsunit where ID like '%{Station}%'";
+                var sql = string.Format("select ID,State from tcsunit where ID like '%{0}%'", Station);
                 var cmd = new MySqlCommand(sql, conn);
                 conn.Open();
                 var reader = cmd.ExecuteReader();
@@ -293,26 +299,29 @@ namespace MX_Form
                     nUnitState.Add(reader.GetString("ID"), reader.GetString("State"));
                 conn.Close();
             }
+
             return nUnitState;
         }
 
-        // GetSubUnitState() 函数用于获取SubUnit状态
         private Dictionary<string, string> GetSubUnitState()
         {
             var nSubUnitState = new Dictionary<string, string>();
-            var connstr = "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
+            var connstr =
+                "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
             using (var conn = new MySqlConnection(connstr))
             {
                 var Station = "MCT" + (111 + plc.ActLogicalStationNumber) + "_V";
-                var sql = $"select * from tcsunit where ID like '%{Station}%'";
+                var sql = $"select ID,Substate from tcsunit where ID like '%{Station}%'";
                 var cmd = new MySqlCommand(sql, conn);
                 conn.Open();
                 var reader = cmd.ExecuteReader();
-                while (reader.Read()) nSubUnitState.Add(reader.GetString("ID"), reader.GetString("SubState"));
+
+                while (reader.Read())
+                    nSubUnitState.Add(reader.GetString("ID"), reader.GetString("SubState"));
                 conn.Close();
             }
 
-            return nSubUnitState; // 
+            return nSubUnitState;
         }
 
         private bool IsUnitActive()
@@ -336,15 +345,25 @@ namespace MX_Form
             var Result = true;
             unitState = GetUnitState();
             foreach (var i in unitState.Keys)
-                if (!(unitState[i] == "RUN") || unitState[i] == "RESERVED")
+                if (!(unitState[i] == "RUN") || unitState[i] == "RESERVED") // 有一个不是RUN或RESERVED就返回false
                 {
                     Result = false;
                     return Result;
                 }
 
             return Result;
-        }*/
+        }
 
+        private string MessageFormat()
+        {
+            var unitState = new Dictionary<string, string>();
+            var Message = string.Empty;
+            unitState = GetUnitState();
+            foreach (var key in unitState.Keys)
+                if (!(unitState[key] == "RUN") || unitState[key] == "RESERVED")
+                    Message += string.Format("The State Of {0} is {1}!", key, unitState[key]);
+            return Message;
+        }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
