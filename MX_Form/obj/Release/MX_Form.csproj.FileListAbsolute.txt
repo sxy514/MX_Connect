@@ -1,8 +1,6 @@
 E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.exe.config
 E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.exe
 E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Form.pdb
-E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Connect.exe
-E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MX_Connect.pdb
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.AssemblyReference.cache
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.SuggestedBindingRedirects.cache
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\Interop.ActUtlTypeLib.dll
@@ -14,3 +12,13 @@ E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.CoreC
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.csproj.CopyComplete
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.exe
 E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.pdb
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MySql.Data.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\Google.Protobuf.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\ZstdNet.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\K4os.Compression.LZ4.Streams.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\BouncyCastle.Crypto.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\System.Buffers.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\K4os.Compression.LZ4.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\K4os.Hash.xxHash.dll
+E:\软件项目\RiderProject\MX_Connect\MX_Form\bin\Release\MySql.Data.xml
+E:\软件项目\RiderProject\MX_Connect\MX_Form\obj\Release\MX_Form.exe.config

@@ -28,6 +28,15 @@ namespace MX_Form
             checkedListBox1.Items.Add("MCT114");
             checkedListBox1.Items.Add("MCT115");
 
+            //Tips 
+            checkedListBox2.Items.Add("清除报警AlarmReset: M759");
+            checkedListBox2.Items.Add("全部选择All Select：M750");
+            checkedListBox2.Items.Add("自动模式Auto Mode：M755");
+            checkedListBox2.Items.Add("手动模式Manual Mode：M756");
+            checkedListBox2.Items.Add("停止Stop：M758");
+            checkedListBox2.Items.Add("启动Start：M757");
+            checkedListBox2.Items.Add("初始化initial：M754");
+
             // 初始化label
             label5.Text = " ";
             label6.Text = " ";
@@ -204,7 +213,7 @@ namespace MX_Form
             returnCode += plc.SetDevice("M750", 1); // all select
             Delay(100);
 
-            returnCode += plc.SetDevice("M755", 1); // manual mode
+            returnCode += plc.SetDevice("M756", 1); // manual mode
             Delay(100);
 
             returnCode += plc.SetDevice("M758", 1); // stop
@@ -238,16 +247,16 @@ namespace MX_Form
                 return;
             }
 
-            returnCode += plc.SetDevice("M754", 1); //initial ？
+            /*  returnCode += plc.SetDevice("M754", 1); //initial ？
             Delay(8000);
 
             returnCode += plc.SetDevice("M750", 1); // All selection
+            Delay(100);*/
+
+            returnCode += plc.SetDevice("M755", 1); // Auto Mode        M755
             Delay(100);
 
-            returnCode += plc.SetDevice("M755", 1); // Auto Mode
-            Delay(100);
-
-            returnCode += plc.SetDevice("M757", 1); // start
+            returnCode += plc.SetDevice("M757", 1); // start         M757
             Delay(5000);
             returnCode += plc.SetDevice("M757", 0); // start复位
 
@@ -287,7 +296,7 @@ namespace MX_Form
         {
             var nUnitState = new Dictionary<string, string>();
             var connstr =
-                "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
+                "data source=localhost;database=tcsv2;user id=root;password=admin;pooling=false;charset=utf8";
             using (var conn = new MySqlConnection(connstr))
             {
                 var Station = "MCT" + (111 + plc.ActLogicalStationNumber);
@@ -307,7 +316,7 @@ namespace MX_Form
         {
             var nSubUnitState = new Dictionary<string, string>();
             var connstr =
-                "data source=localhost;database=tcsv2;user id=root;password=808999;pooling=false;charset=utf8";
+                "data source=localhost;database=tcsv2;user id=root;password=admin;pooling=false;charset=utf8";
             using (var conn = new MySqlConnection(connstr))
             {
                 var Station = "MCT" + (111 + plc.ActLogicalStationNumber) + "_V";
@@ -369,6 +378,47 @@ namespace MX_Form
         {
             // 读取选中的项
             plc.ActLogicalStationNumber = checkedListBox1.SelectedIndex + 1; // checklist 索引号从0开始的
+        }
+
+        private void button4_Click(object sender, EventArgs e) // SET 按钮
+        {
+            // 连接PLC
+            var returnCode = plc.Open();
+
+            // 获取textBox1中的值
+            var str = textBox1.Text;
+            returnCode += plc.SetDevice(str, 1); // SET 1
+            Delay(100);
+
+            returnCode += plc.Close();
+            if (returnCode != 0)
+                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+            else
+                button4.Enabled = false;
+            textBox1.Enabled = false;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void button5_Click(object sender, EventArgs e) // RESET 按钮
+        {
+            var returnCode = plc.Open();
+            // 获取textBox1中的值
+            var str = textBox1.Text;
+            returnCode += plc.SetDevice(str, 0); // 归0
+            Delay(100);
+            returnCode += plc.Close();
+            if (returnCode != 0)
+                MessageBox.Show("PLC ReSetDevice failed. Please try again or contact the administrator.");
+            else
+                button4.Enabled = true;
+            textBox1.Enabled = true;
+        }
+
+        private void checkedListBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }
