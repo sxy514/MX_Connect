@@ -1,4 +1,6 @@
-﻿namespace MX_Form
+﻿using System.Windows.Forms;
+
+namespace MX_Form
 {
     partial class Form1
     {
@@ -52,6 +54,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
@@ -87,7 +90,7 @@
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 26);
+            this.checkedListBox1.Location = new System.Drawing.Point(12, 36);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(76, 84);
             this.checkedListBox1.TabIndex = 3;
@@ -283,6 +286,7 @@
             // 
             // checkedListBox2
             // 
+            this.checkedListBox2.BackColor = System.Drawing.Color.White;
             this.checkedListBox2.FormattingEnabled = true;
             this.checkedListBox2.Location = new System.Drawing.Point(432, 38);
             this.checkedListBox2.Name = "checkedListBox2";
@@ -290,11 +294,23 @@
             this.checkedListBox2.TabIndex = 23;
             this.checkedListBox2.SelectedIndexChanged += new System.EventHandler(this.checkedListBox2_SelectedIndexChanged);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(432, 299);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(78, 16);
+            this.checkBox1.TabIndex = 24;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 376);
+            this.ClientSize = new System.Drawing.Size(678, 351);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.checkedListBox2);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -355,6 +371,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.CheckedListBox checkedListBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
