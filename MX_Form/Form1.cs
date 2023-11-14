@@ -26,14 +26,6 @@ namespace MX_Form
             checkedListBox1.Items.Add("MCT114");
             checkedListBox1.Items.Add("MCT115");
 
-            //Tips 
-            checkedListBox2.Items.Add("清除报警AlarmReset: M759");
-            checkedListBox2.Items.Add("全部选择All Select：M750");
-            checkedListBox2.Items.Add("自动模式Auto Mode：M755");
-            checkedListBox2.Items.Add("手动模式Manual Mode：M756");
-            checkedListBox2.Items.Add("停止Stop：M758");
-            checkedListBox2.Items.Add("启动Start：M757");
-            checkedListBox2.Items.Add("初始化initial：M754");
 
             // 初始化label
             label5.Text = " ";
@@ -44,6 +36,10 @@ namespace MX_Form
             label13.Text = " ";
             label14.Text = " ";
             label16.Text = " ";
+
+            button4.Enabled = false;
+            button5.Enabled = false;
+            textBox1.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e) // 连接并判断各轴是否在原点
@@ -80,6 +76,7 @@ namespace MX_Form
             }
 
             #region 判断各个轴是否在原点
+
             if (_ioAdress[0] == 0)
             {
                 label5.Text = "NG";
@@ -159,6 +156,7 @@ namespace MX_Form
             {
                 label16.Text = "OK";
             }
+
             #endregion
 
             returnCode = plc.Close();
@@ -211,7 +209,7 @@ namespace MX_Form
 
             Delay(100);
             returnCode += plc.SetDevice("M756", 0); // manual mode
-  
+
             if (returnCode != 0)
                 MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
 
@@ -249,10 +247,7 @@ namespace MX_Form
             if (returnCode != 0)
                 MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
             returnCode = plc.Close();
-            if (returnCode != 0)
-            {
-                MessageBox.Show("PLC Close failed. Please try Again!.");
-            }
+            if (returnCode != 0) MessageBox.Show("PLC Close failed. Please try Again!.");
 
             button1.Enabled = true;
             button2.Enabled = true;
@@ -269,7 +264,7 @@ namespace MX_Form
             while (DateTime.Now < stop) Application.DoEvents();
         }
 
-  
+
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             // 读取选中的项
@@ -313,14 +308,104 @@ namespace MX_Form
             textBox1.Enabled = true;
         }
 
-        private void checkedListBox2_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void iOListToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var newForm = new Form();
+
+            newForm.Text = "I/O List";
+
+            // 创建并添加文本标签
+            var label1 = new Label();
+            label1.Text = @"清除报警: M759";
+            label1.Location = new Point(50, 30);
+            newForm.Controls.Add(label1);
+
+            var label2 = new Label();
+            label2.Text = @"全部选择: M750";
+            label2.Location = new Point(50, 60); // 设置第二行文本标签的位置
+            newForm.Controls.Add(label2); // 将第二行文本标签添加到新窗体中
+
+            var label3 = new Label();
+            label3.Text = @"自动模式: M755";
+            label3.Location = new Point(50, 90);
+            newForm.Controls.Add(label3);
+
+            var label4 = new Label();
+            label4.Text = @"手动模式: M756";
+            label4.Location = new Point(50, 120);
+            newForm.Controls.Add(label4);
+
+            var label5 = new Label();
+            label5.Text = @"停止: M758";
+            label5.Location = new Point(50, 150);
+            newForm.Controls.Add(label5);
+
+            var label6 = new Label();
+            label6.Text = @"启动: M757";
+            label6.Location = new Point(50, 180);
+            newForm.Controls.Add(label6);
+
+            var label7 = new Label();
+            label7.Text = @"初始化: M754";
+            label7.Location = new Point(50, 210);
+            newForm.Controls.Add(label7);
+
+            // 设置新窗体的大小
+            newForm.Size = new Size(240, 300);
+
+            // 显示新窗体
+            newForm.Show(this);
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+
+        private TextBox textBox;
+        private Form newWindow;
+
+        private void unlockToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // 创建一个新的窗体对象
+            var newWindow = new Form();
+
+            newWindow.Text = @"请输入密码";
+
+            // 创建文本框控件
+            textBox = new TextBox();
+            textBox.Location = new Point(30, 30); // 设置文本框的位置
+            newWindow.Controls.Add(textBox); // 将文本框添加到新窗体中
+            textBox.PasswordChar = '*'; // 将文本框输入内容替换为*
+
+            // 创建登录按钮控件
+            var loginButton = new Button();
+            loginButton.Text = @"登录";
+            loginButton.Location = new Point(150, 30); // 设置登录按钮的位置
+            loginButton.Click += LoginButton_Click; // 为登录按钮添加点击事件处理程序
+            newWindow.Controls.Add(loginButton); // 将登录按钮添加到新窗体中
+
+
+            // 设置新窗体的大小
+            newWindow.Size = new Size(270, 130);
+
+            // 显示新窗体
+            newWindow.ShowDialog();
         }
 
-        
+        private void LoginButton_Click(object sender, EventArgs e)
+        {
+            // 在这里编写登录逻辑
+            // 获取文本框中的输入，进行验证操作
+            var strPwd = textBox.Text;
+            // MessageBox.Show(strPwd);
+            if (strPwd != "723181")
+            {
+                MessageBox.Show("密码错误，重新输入！");
+            }
+            else
+            {
+                button4.Enabled = true;
+                button5.Enabled = true;
+                textBox1.Enabled = true;
+            }
+        }
     }
 }
