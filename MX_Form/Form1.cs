@@ -66,11 +66,11 @@ namespace MX_Form
                 returnCode += plc.GetDevice("M245", out _ioAdress[5]);
                 returnCode += plc.GetDevice("M246", out _ioAdress[6]);
                 returnCode += plc.GetDevice("M247", out _ioAdress[7]);
-                if (returnCode != 0) MessageBox.Show("PLC getDevice failed. Please contact the administrator.");
+                if (returnCode != 0) MessageBox.Show(@"PLC getDevice failed. Please contact the administrator.");
             }
             else
             {
-                MessageBox.Show("PLC connection failed. Please contact the administrator.");
+                MessageBox.Show(@"PLC connection failed. Please contact the administrator.");
                 plc.Close();
                 return;
             }
@@ -161,7 +161,7 @@ namespace MX_Form
 
             returnCode = plc.Close();
             if (returnCode != 0)
-                MessageBox.Show("PLC Close failed. Please try Again!.");
+                MessageBox.Show(@"PLC Close failed. Please try Again!.");
             else
                 button1.Enabled = false;
         }
@@ -170,14 +170,14 @@ namespace MX_Form
         {
             if (button1.Enabled)
             {
-                MessageBox.Show("Please select the equipment and connect it and try again!");
+                MessageBox.Show(@"Please select the equipment and connect it and try again!");
                 return;
             }
 
             foreach (var checkStatus in _ioAdress)
                 if (checkStatus == 0)
                 {
-                    MessageBox.Show("MCT cannot be remotely recovered .Please check the equipment on site.");
+                    MessageBox.Show(@"MCT cannot be remotely recovered .Please check the equipment on site.");
                     plc.Close();
                     button1.Enabled = true;
                     return;
@@ -188,7 +188,7 @@ namespace MX_Form
             returnCode += plc.Open();
             if (returnCode != 0)
             {
-                MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC connection failed. Please try again or contact the administrator.");
                 plc.Close();
                 return;
             }
@@ -197,63 +197,66 @@ namespace MX_Form
             Delay(100);
             returnCode += plc.SetDevice("M759", 0); // 复位
 
-            returnCode += plc.SetDevice("M750", 1); // all select
-            Delay(100);
-
-            returnCode += plc.SetDevice("M756", 1); // manual mode
-            Delay(100);
-
-            returnCode += plc.SetDevice("M758", 1); // stop
-            Delay(300);
-            returnCode += plc.SetDevice("M758", 0); // stop复位
-
-            Delay(100);
-            returnCode += plc.SetDevice("M756", 0); // manual mode
-
+            /* returnCode += plc.SetDevice("M750", 1); // all select
+             Delay(100);
+ 
+             returnCode += plc.SetDevice("M756", 1); // manual mode
+             Delay(100);
+ 
+             returnCode += plc.SetDevice("M758", 1); // stop
+             Delay(300);
+             returnCode += plc.SetDevice("M758", 0); // stop复位
+ 
+             Delay(100);
+             returnCode += plc.SetDevice("M756", 0); // manual mode
+            */
             if (returnCode != 0)
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
 
             returnCode = plc.Close();
             if (returnCode != 0)
-                MessageBox.Show("PLC Close failed. Please try Again!.");
+                MessageBox.Show(@"PLC Close failed. Please try Again!.");
             else
                 button2.Enabled = false;
         }
 
         private void button3_Click(object sender, EventArgs e) // Auto 按键
         {
-            if (button1.Enabled)
+            if (button2.Enabled)
             {
-                MessageBox.Show("Please select the equipment and connect it and try again!");
+                MessageBox.Show(@"Please click CheckIO_Reset and try again!");
                 return;
             }
 
+            button3.Enabled = false;
             var returnCode = 0;
             // 连接PLC
             returnCode += plc.Open();
             if (returnCode != 0)
             {
-                MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC connection failed. Please try again or contact the administrator.");
                 return;
             }
 
             returnCode += plc.SetDevice("M755", 1); // Auto Mode        M755
-            Delay(100);
+            Delay(1000);
+            returnCode += plc.SetDevice("M755", 0); // Auto Mode复位        M755
 
             returnCode += plc.SetDevice("M757", 1); // start         M757
-            Delay(5000);
+            Delay(4000);
             returnCode += plc.SetDevice("M757", 0); // start复位
 
             if (returnCode != 0)
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
+
             returnCode = plc.Close();
-            if (returnCode != 0) MessageBox.Show("PLC Close failed. Please try Again!.");
+            if (returnCode != 0) MessageBox.Show(@"PLC Close failed. Please try Again!.");
 
             button1.Enabled = true;
             button2.Enabled = true;
+            button3.Enabled = true;
 
-
-            //button3.Enabled = false; 这里需要查询设备状态并给出提示了。
+            //button3.Enabled = false; 这里需要查询设备状态并给出提示了。可以使用Auto信号进行判定
         }
 
 
@@ -273,7 +276,6 @@ namespace MX_Form
 
         private void button4_Click(object sender, EventArgs e) // SET 按钮
         {
-            // 连接PLC
             var returnCode = plc.Open();
 
             // 获取textBox1中的值
@@ -283,7 +285,7 @@ namespace MX_Form
 
             returnCode += plc.Close();
             if (returnCode != 0)
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
             else
                 button4.Enabled = false;
             textBox1.Enabled = false;
@@ -302,7 +304,7 @@ namespace MX_Form
             Delay(100);
             returnCode += plc.Close();
             if (returnCode != 0)
-                MessageBox.Show("PLC ReSetDevice failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC ReSetDevice failed. Please try again or contact the administrator.");
             else
                 button4.Enabled = true;
             textBox1.Enabled = true;
@@ -398,7 +400,7 @@ namespace MX_Form
             // MessageBox.Show(strPwd);
             if (strPwd != "723181")
             {
-                MessageBox.Show("密码错误，重新输入！");
+                MessageBox.Show(@"密码错误，重新输入！");
             }
             else
             {
