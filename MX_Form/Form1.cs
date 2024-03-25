@@ -249,14 +249,20 @@ namespace MX_Form
             if (returnCode != 0)
                 MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
 
+            // 这里需要做一个查询设备状态并给出提示。可以使用Auto信号进行判定
+            int rv;
+            returnCode += plc.GetDevice("M2100", out rv);
+            if (returnCode != 0 || rv != 1)
+                MessageBox.Show(@"MCT recovery failed.Please go to the scene to check the reason");
+            else
+                MessageBox.Show(@"M2100 ON,MCT recovery success!");
+
             returnCode = plc.Close();
             if (returnCode != 0) MessageBox.Show(@"PLC Close failed. Please try Again!.");
 
             button1.Enabled = true;
             button2.Enabled = true;
             button3.Enabled = true;
-
-            //button3.Enabled = false; 这里需要查询设备状态并给出提示了。可以使用Auto信号进行判定
         }
 
 
