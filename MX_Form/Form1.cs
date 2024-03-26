@@ -25,7 +25,7 @@ namespace MX_Form
             checkedListBox1.Items.Add("MCT113");
             checkedListBox1.Items.Add("MCT114");
             checkedListBox1.Items.Add("MCT115");
-
+            checkedListBox1.CheckOnClick = true;
 
             // 初始化label
             label5.Text = " ";
@@ -53,6 +53,8 @@ namespace MX_Form
             label13.BackColor = Color.Transparent;
             label14.BackColor = Color.Transparent;
             label16.BackColor = Color.Transparent;
+
+            checkedListBox1.Enabled = false;
 
             var returnCode = plc.Open();
             if (returnCode == 0)
@@ -180,6 +182,7 @@ namespace MX_Form
                     MessageBox.Show(@"MCT cannot be remotely recovered .Please check the equipment on site.");
                     plc.Close();
                     button1.Enabled = true;
+                    checkedListBox1.Enabled = true;
                     return;
                 }
 
@@ -263,6 +266,7 @@ namespace MX_Form
             button1.Enabled = true;
             button2.Enabled = true;
             button3.Enabled = true;
+            checkedListBox1.Enabled = true;
         }
 
 
@@ -276,8 +280,15 @@ namespace MX_Form
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 读取选中的项
             plc.ActLogicalStationNumber = checkedListBox1.SelectedIndex + 1; // checklist 索引号从0开始的
+
+            for (int ix = 0; ix < checkedListBox1.Items.Count; ++ix)
+            {
+                if (ix != checkedListBox1.SelectedIndex)
+                {
+                    checkedListBox1.SetItemChecked(ix, false);
+                }
+            }
         }
 
         private void button4_Click(object sender, EventArgs e) // SET 按钮
@@ -379,20 +390,27 @@ namespace MX_Form
 
             // 创建文本框控件
             textBox = new TextBox();
-            textBox.Location = new Point(30, 30); // 设置文本框的位置
+            textBox.Location = new Point(150, 30); // 设置文本框的位置
             newWindow.Controls.Add(textBox); // 将文本框添加到新窗体中
             textBox.PasswordChar = '*'; // 将文本框输入内容替换为*
 
             // 创建登录按钮控件
             var loginButton = new Button();
             loginButton.Text = @"登录";
-            loginButton.Location = new Point(150, 30); // 设置登录按钮的位置
+            loginButton.Location = new Point(260, 30); // 设置登录按钮的位置
             loginButton.Click += LoginButton_Click; // 为登录按钮添加点击事件处理程序
             newWindow.Controls.Add(loginButton); // 将登录按钮添加到新窗体中
 
+            // 创建提示语 Label 控件
+            Label label = new Label();
+            label.Text = @"请注意，本功能将可操作任意寄存器地址，未经允许禁止使用！"; // 设置提示语
+            label.Location = new Point(30, 10); // 设置提示语的位置
+            label.Width = 400; // 设置 Label 的宽度，以确保完全显示提示语
+            newWindow.Controls.Add(label); 
+
 
             // 设置新窗体的大小
-            newWindow.Size = new Size(270, 130);
+            newWindow.Size = new Size(400, 110);
 
             // 显示新窗体
             newWindow.ShowDialog();
