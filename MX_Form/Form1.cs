@@ -282,13 +282,9 @@ namespace MX_Form
         {
             plc.ActLogicalStationNumber = checkedListBox1.SelectedIndex + 1; // checklist 索引号从0开始的
 
-            for (int ix = 0; ix < checkedListBox1.Items.Count; ++ix)
-            {
+            for (var ix = 0; ix < checkedListBox1.Items.Count; ++ix)
                 if (ix != checkedListBox1.SelectedIndex)
-                {
                     checkedListBox1.SetItemChecked(ix, false);
-                }
-            }
         }
 
         private void button4_Click(object sender, EventArgs e) // SET 按钮
@@ -402,11 +398,11 @@ namespace MX_Form
             newWindow.Controls.Add(loginButton); // 将登录按钮添加到新窗体中
 
             // 创建提示语 Label 控件
-            Label label = new Label();
+            var label = new Label();
             label.Text = @"请注意，本功能将可操作任意寄存器地址，未经允许禁止使用！"; // 设置提示语
             label.Location = new Point(30, 10); // 设置提示语的位置
             label.Width = 400; // 设置 Label 的宽度，以确保完全显示提示语
-            newWindow.Controls.Add(label); 
+            newWindow.Controls.Add(label);
 
 
             // 设置新窗体的大小
