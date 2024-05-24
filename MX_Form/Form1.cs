@@ -196,9 +196,9 @@ namespace MX_Form
                 return;
             }
 
-            returnCode += plc.SetDevice("M759", 1); // 清除报警
+            returnCode += plc.SetDevice("M749", 1); // 清除报警
             Delay(100);
-            returnCode += plc.SetDevice("M759", 0); // 复位
+            returnCode += plc.SetDevice("M749", 0); // 复位
 
             /* returnCode += plc.SetDevice("M750", 1); // all select
              Delay(100);
@@ -332,7 +332,7 @@ namespace MX_Form
 
             // 创建并添加文本标签
             var label1 = new Label();
-            label1.Text = @"清除报警: M759";
+            label1.Text = @"清除报警: M749";
             label1.Location = new Point(50, 30);
             newForm.Controls.Add(label1);
 
