@@ -74,6 +74,7 @@ namespace MX_Form
             {
                 MessageBox.Show(@"PLC connection failed. Please contact the administrator.");
                 plc.Close();
+                checkedListBox1.Enabled = true;
                 return;
             }
 
