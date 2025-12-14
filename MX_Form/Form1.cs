@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 using ActUtlTypeLib;
 
@@ -8,6 +7,12 @@ namespace MX_Form
 {
     public partial class Form1 : Form
     {
+        // 创建一个整型数组，用于存储8个轴变量的地址
+        private readonly int[] _ioAdress = new int[8];
+
+        // 创建PLC对象
+        private readonly ActUtlType plc = new ActUtlType();
+
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +25,7 @@ namespace MX_Form
             checkedListBox1.Items.Add("MCT113");
             checkedListBox1.Items.Add("MCT114");
             checkedListBox1.Items.Add("MCT115");
+            checkedListBox1.CheckOnClick = true;
 
             // 初始化label
             label5.Text = " ";
@@ -30,15 +36,11 @@ namespace MX_Form
             label13.Text = " ";
             label14.Text = " ";
             label16.Text = " ";
+
+            button4.Enabled = false;
+            button5.Enabled = false;
+            textBox1.Enabled = false;
         }
-
-        private int logicalNumber;
-
-        // 为各个轴创建变量
-        // 创建一个整型数组，用于存储8个轴变量的地址
-        private readonly int[] _ioAdress = new int[8];
-        // 创建PLC对象
-        private readonly ActUtlType plc = new ActUtlType();
 
         private void button1_Click(object sender, EventArgs e) // 连接并判断各轴是否在原点
         {
@@ -52,6 +54,8 @@ namespace MX_Form
             label14.BackColor = Color.Transparent;
             label16.BackColor = Color.Transparent;
 
+            checkedListBox1.Enabled = false;
+
             var returnCode = plc.Open();
             if (returnCode == 0)
             {
@@ -64,19 +68,18 @@ namespace MX_Form
                 returnCode += plc.GetDevice("M245", out _ioAdress[5]);
                 returnCode += plc.GetDevice("M246", out _ioAdress[6]);
                 returnCode += plc.GetDevice("M247", out _ioAdress[7]);
-                if (returnCode != 0)
-                {
-                    MessageBox.Show("PLC getDevice failed. Please contact the administrator.");
-                }
+                if (returnCode != 0) MessageBox.Show(@"PLC getDevice failed. Please contact the administrator.");
             }
             else
             {
-                MessageBox.Show("PLC connection failed. Please contact the administrator.");
+                MessageBox.Show(@"PLC connection failed. Please contact the administrator.");
                 plc.Close();
+                checkedListBox1.Enabled = true;
                 return;
             }
 
-            // 判断各个轴是否在原点
+            #region 判断各个轴是否在原点
+
             if (_ioAdress[0] == 0)
             {
                 label5.Text = "NG";
@@ -157,141 +160,275 @@ namespace MX_Form
                 label16.Text = "OK";
             }
 
-            returnCode = plc.Close();  // 注意，这里关闭了PLC连接
+            #endregion
+
+            returnCode = plc.Close();
             if (returnCode != 0)
-            {
-                MessageBox.Show("PLC Close failed. Please try Again!.");
-               
-            }
+                MessageBox.Show(@"PLC Close failed. Please try Again!.");
             else
-            {
                 button1.Enabled = false;
-            }
-            
         }
 
         private void button2_Click(object sender, EventArgs e) //  CheckIO_Reset
         {
-            foreach (var checkStatus in _ioAdress)
+            if (button1.Enabled)
             {
+                MessageBox.Show(@"Please select the equipment and connect it and try again!");
+                return;
+            }
+
+            foreach (var checkStatus in _ioAdress)
                 if (checkStatus == 0)
                 {
-                    MessageBox.Show("MCT cannot be remotely recovered .Please check the equipment on site");
+                    MessageBox.Show(@"MCT cannot be remotely recovered .Please check the equipment on site.");
+                    plc.Close();
+                    button1.Enabled = true;
+                    checkedListBox1.Enabled = true;
                     return;
                 }
-            }
 
             var returnCode = 0;
             // 连接PLC
             returnCode += plc.Open();
             if (returnCode != 0)
             {
-                MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
+                MessageBox.Show(@"PLC connection failed. Please try again or contact the administrator.");
                 plc.Close();
                 return;
             }
 
-            returnCode += plc.SetDevice("M759", 1); // 清除报警
-            Thread.Sleep(100);
-            returnCode +=  plc.SetDevice("M759", 0); // 复位
+            returnCode += plc.SetDevice("M749", 1); // 清除报警
+            Delay(100);
+            returnCode += plc.SetDevice("M749", 0); // 复位
 
-            returnCode += plc.SetDevice("M750", 1);// all select
-            Thread.Sleep(100);
-
-            returnCode += plc.SetDevice("M755", 1); // manual mode
-            Thread.Sleep(100);
-
-            returnCode += plc.SetDevice("M758", 1); // stop
-            Thread.Sleep(300);
-            returnCode += plc.SetDevice("M758", 0); // stop复位
-
+            /* returnCode += plc.SetDevice("M750", 1); // all select
+             Delay(100);
+ 
+             returnCode += plc.SetDevice("M756", 1); // manual mode
+             Delay(100);
+ 
+             returnCode += plc.SetDevice("M758", 1); // stop
+             Delay(300);
+             returnCode += plc.SetDevice("M758", 0); // stop复位
+ 
+             Delay(100);
+             returnCode += plc.SetDevice("M756", 0); // manual mode
+            */
             if (returnCode != 0)
-            {
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
-            }
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
 
-            returnCode = plc.Close();  // 注意，这里关闭了PLC连接
+            returnCode = plc.Close();
             if (returnCode != 0)
-            {
-                MessageBox.Show("PLC Close failed. Please try Again!.");
-            }
+                MessageBox.Show(@"PLC Close failed. Please try Again!.");
             else
-            {
                 button2.Enabled = false;
-            }
         }
 
         private void button3_Click(object sender, EventArgs e) // Auto 按键
-        {   
-           /* var returnCode1 = 0;
-            if (_z1Pos == 1 && _z2Pos == 1 && _z3Pos == 1 && _z4Pos == 1 && _t1Pos == 1 && _y1Pos == 1 &&
-                _handStatus == 1 &&
-                _bufferStatus == 1)
+        {
+            if (button2.Enabled)
             {
-                returnCode1 += plc.SetDevice("M754", 1); //initial ？
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M750", 1); // All selection
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M755", 1); // Auto Mode
-                Thread.Sleep(500);
-
-                returnCode1 += plc.SetDevice("M757", 1); // start
-
-                returnCode1 += plc.Close();
-                if (returnCode1 != 0) MessageBox.Show("PLC Close failed. Please contact the administrator.");
+                MessageBox.Show(@"Please click CheckIO_Reset and try again!");
+                return;
             }
-            else
+
+            button3.Enabled = false;
+            var returnCode = 0;
+            // 连接PLC
+            returnCode += plc.Open();
+            if (returnCode != 0)
             {
-                MessageBox.Show("Please check the equipment on site");
-                plc.Close();
-                button1.Enabled = true;
-            }*/
-           var returnCode = 0;
-           // 连接PLC
-           returnCode += plc.Open();
-           if (returnCode != 0)
-           {
-               MessageBox.Show("PLC connection failed. Please try again or contact the administrator.");
-               return;
-           }
-           
-           returnCode += plc.SetDevice("M754", 1); //initial ？
-           Thread.Sleep(8000);
+                MessageBox.Show(@"PLC connection failed. Please try again or contact the administrator.");
+                return;
+            }
 
-           returnCode += plc.SetDevice("M750", 1); // All selection
-           Thread.Sleep(100);
+            returnCode += plc.SetDevice("M755", 1); // Auto Mode        M755
+            Delay(1000);
+            returnCode += plc.SetDevice("M755", 0); // Auto Mode复位        M755
 
-           returnCode += plc.SetDevice("M755", 1); // Auto Mode
-           Thread.Sleep(100);
+            returnCode += plc.SetDevice("M757", 1); // start         M757
+            Delay(4000);
+            returnCode += plc.SetDevice("M757", 0); // start复位
 
-           returnCode += plc.SetDevice("M757", 1); // start
-           Thread.Sleep(5000);
-           returnCode += plc.SetDevice("M757", 0); // start复位
+            if (returnCode != 0)
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
 
-           if (returnCode != 0)
-           {
-                MessageBox.Show("PLC SetDevice failed. Please try again or contact the administrator.");
-           }
-           returnCode = plc.Close();
-           if (returnCode != 0)
-           {
-                MessageBox.Show("PLC Close failed. Please try Again!.");
-           }
-           else
-           {
-                //button3.Enabled = false;
-           }
+            // 这里需要做一个查询设备状态并给出提示。可以使用Auto信号进行判定
+            int rv;
+            returnCode += plc.GetDevice("M2100", out rv);
+            if (returnCode != 0 || rv != 1)
+                MessageBox.Show(@"MCT recovery failed.Please go to the scene to check the reason");
+            else
+                MessageBox.Show(@"M2100 ON,MCT recovery success!");
 
+            returnCode = plc.Close();
+            if (returnCode != 0) MessageBox.Show(@"PLC Close failed. Please try Again!.");
 
-
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            checkedListBox1.Enabled = true;
         }
+
+
+        // 创建一个Delay函数，在指定的时间内使用application的DoEvents函数
+        private void Delay(int ms)
+        {
+            var stop = DateTime.Now.AddMilliseconds(ms);
+            while (DateTime.Now < stop) Application.DoEvents();
+        }
+
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 读取选中的项
             plc.ActLogicalStationNumber = checkedListBox1.SelectedIndex + 1; // checklist 索引号从0开始的
+
+            for (var ix = 0; ix < checkedListBox1.Items.Count; ++ix)
+                if (ix != checkedListBox1.SelectedIndex)
+                    checkedListBox1.SetItemChecked(ix, false);
+        }
+
+        private void button4_Click(object sender, EventArgs e) // SET 按钮
+        {
+            var returnCode = plc.Open();
+
+            // 获取textBox1中的值
+            var str = textBox1.Text;
+            returnCode += plc.SetDevice(str, 1); // SET ON
+            Delay(100);
+
+            returnCode += plc.Close();
+            if (returnCode != 0)
+                MessageBox.Show(@"PLC SetDevice failed. Please try again or contact the administrator.");
+            else
+                button4.Enabled = false;
+            textBox1.Enabled = false;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void button5_Click(object sender, EventArgs e) // RESET 按钮
+        {
+            var returnCode = plc.Open();
+            // 获取textBox1中的值
+            var str = textBox1.Text;
+            returnCode += plc.SetDevice(str, 0); // RESET
+            Delay(100);
+            returnCode += plc.Close();
+            if (returnCode != 0)
+                MessageBox.Show(@"PLC ReSetDevice failed. Please try again or contact the administrator.");
+            else
+                button4.Enabled = true;
+            textBox1.Enabled = true;
+        }
+
+
+        private void iOListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newForm = new Form();
+
+            newForm.Text = "I/O List";
+
+            // 创建并添加文本标签
+            var label1 = new Label();
+            label1.Text = @"清除报警: M749";
+            label1.Location = new Point(50, 30);
+            newForm.Controls.Add(label1);
+
+            var label2 = new Label();
+            label2.Text = @"全部选择: M750";
+            label2.Location = new Point(50, 60); // 设置第二行文本标签的位置
+            newForm.Controls.Add(label2); // 将第二行文本标签添加到新窗体中
+
+            var label3 = new Label();
+            label3.Text = @"自动模式: M755";
+            label3.Location = new Point(50, 90);
+            newForm.Controls.Add(label3);
+
+            var label4 = new Label();
+            label4.Text = @"手动模式: M756";
+            label4.Location = new Point(50, 120);
+            newForm.Controls.Add(label4);
+
+            var label5 = new Label();
+            label5.Text = @"停止: M758";
+            label5.Location = new Point(50, 150);
+            newForm.Controls.Add(label5);
+
+            var label6 = new Label();
+            label6.Text = @"启动: M757";
+            label6.Location = new Point(50, 180);
+            newForm.Controls.Add(label6);
+
+            var label7 = new Label();
+            label7.Text = @"初始化: M754";
+            label7.Location = new Point(50, 210);
+            newForm.Controls.Add(label7);
+
+            // 设置新窗体的大小
+            newForm.Size = new Size(240, 300);
+
+            // 显示新窗体
+            newForm.Show(this);
+        }
+
+
+        private TextBox textBox;
+        private Form newWindow;
+
+        private void unlockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 创建一个新的窗体对象
+            var newWindow = new Form();
+
+            newWindow.Text = @"请输入密码";
+
+            // 创建文本框控件
+            textBox = new TextBox();
+            textBox.Location = new Point(150, 30); // 设置文本框的位置
+            newWindow.Controls.Add(textBox); // 将文本框添加到新窗体中
+            textBox.PasswordChar = '*'; // 将文本框输入内容替换为*
+
+            // 创建登录按钮控件
+            var loginButton = new Button();
+            loginButton.Text = @"登录";
+            loginButton.Location = new Point(260, 30); // 设置登录按钮的位置
+            loginButton.Click += LoginButton_Click; // 为登录按钮添加点击事件处理程序
+            newWindow.Controls.Add(loginButton); // 将登录按钮添加到新窗体中
+
+            // 创建提示语 Label 控件
+            var label = new Label();
+            label.Text = @"请注意，本功能将可操作任意寄存器地址，未经允许禁止使用！"; // 设置提示语
+            label.Location = new Point(30, 10); // 设置提示语的位置
+            label.Width = 400; // 设置 Label 的宽度，以确保完全显示提示语
+            newWindow.Controls.Add(label);
+
+
+            // 设置新窗体的大小
+            newWindow.Size = new Size(400, 110);
+
+            // 显示新窗体
+            newWindow.ShowDialog();
+        }
+
+        private void LoginButton_Click(object sender, EventArgs e)
+        {
+            // 在这里编写登录逻辑
+            // 获取文本框中的输入，进行验证操作
+            var strPwd = textBox.Text;
+            // MessageBox.Show(strPwd);
+            if (strPwd != "723181")
+            {
+                MessageBox.Show(@"密码错误，重新输入！");
+            }
+            else
+            {
+                button4.Enabled = true;
+                button5.Enabled = true;
+                textBox1.Enabled = true;
+            }
         }
     }
 }

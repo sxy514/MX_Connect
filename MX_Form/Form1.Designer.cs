@@ -1,4 +1,6 @@
-﻿namespace MX_Form
+﻿using System.Windows.Forms;
+
+namespace MX_Form
 {
     partial class Form1
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -48,6 +51,13 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.iOListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -72,7 +82,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(307, 196);
+            this.button3.Location = new System.Drawing.Point(301, 196);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
@@ -83,7 +93,7 @@
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 26);
+            this.checkedListBox1.Location = new System.Drawing.Point(12, 36);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(76, 84);
             this.checkedListBox1.TabIndex = 3;
@@ -94,36 +104,36 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(112, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "label1";
+            this.label1.Text = "Z1-Axis";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(174, 35);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 12);
+            this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 5;
-            this.label2.Text = "label2";
+            this.label2.Text = "Z2-Axis";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(241, 35);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.Size = new System.Drawing.Size(47, 12);
             this.label3.TabIndex = 6;
-            this.label3.Text = "label3";
+            this.label3.Text = "Z3-Axis";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(305, 35);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 12);
+            this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 7;
-            this.label4.Text = "label4";
+            this.label4.Text = "Z4-Axis";
             // 
             // label5
             // 
@@ -176,25 +186,25 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 12);
             this.label9.TabIndex = 12;
-            this.label9.Text = "label9";
+            this.label9.Text = "T-Axis";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(168, 108);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(47, 12);
+            this.label10.Size = new System.Drawing.Size(41, 12);
             this.label10.TabIndex = 13;
-            this.label10.Text = "label10";
+            this.label10.Text = "Y-Axis";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(235, 108);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(47, 12);
+            this.label11.Size = new System.Drawing.Size(41, 12);
             this.label11.TabIndex = 14;
-            this.label11.Text = "label11";
+            this.label11.Text = "Buffer";
             // 
             // label12
             // 
@@ -234,9 +244,9 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(299, 108);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(47, 12);
+            this.label15.Size = new System.Drawing.Size(53, 12);
             this.label15.TabIndex = 18;
-            this.label15.Text = "label15";
+            this.label15.Text = "MCT_Hand";
             // 
             // label16
             // 
@@ -249,11 +259,67 @@
             this.label16.TabIndex = 19;
             this.label16.Text = "OK";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(85, 261);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(209, 261);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 21;
+            this.button4.Text = "SET";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(301, 261);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 22;
+            this.button5.Text = "RESET";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.iOListToolStripMenuItem,
+            this.unlockToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(438, 25);
+            this.menuStrip1.TabIndex = 23;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // iOListToolStripMenuItem
+            // 
+            this.iOListToolStripMenuItem.Name = "iOListToolStripMenuItem";
+            this.iOListToolStripMenuItem.Size = new System.Drawing.Size(62, 21);
+            this.iOListToolStripMenuItem.Text = "I/O List";
+            this.iOListToolStripMenuItem.Click += new System.EventHandler(this.iOListToolStripMenuItem_Click);
+            // 
+            // unlockToolStripMenuItem
+            // 
+            this.unlockToolStripMenuItem.Name = "unlockToolStripMenuItem";
+            this.unlockToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
+            this.unlockToolStripMenuItem.Text = "Unlock";
+            this.unlockToolStripMenuItem.Click += new System.EventHandler(this.unlockToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(410, 258);
+            this.ClientSize = new System.Drawing.Size(438, 316);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
@@ -274,11 +340,16 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "MCT_Remote";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -306,6 +377,12 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem iOListToolStripMenuItem;
+        private ToolStripMenuItem unlockToolStripMenuItem;
     }
 }
 
